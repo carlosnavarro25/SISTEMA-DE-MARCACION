@@ -1,0 +1,13 @@
+body{
+
+background-color:lightblue;
+font-family: "Times New Roman", Times, serif;
+text-align: center;
+border: 3px solid green;
+}
+
+li {
+  font-family:georgia;
+  font-size: 20px;
+
+}
