@@ -2,12 +2,13 @@ from flask import Flask, request, flash
 from flask import render_template
 from flask import redirect
 from flask_sqlalchemy import SQLAlchemy
+from _datetime import datetime
 
-"""Aplicacion genera una lista de supermercado
-"""
+
+
 
 app = Flask(__name__)
-app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///listasuper.sqlite3'
+app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///SistemaMarcacion.sqlite3'
 app.config['SECRET_KEY'] = 'uippc3'
 
 db = SQLAlchemy(app)
@@ -23,31 +24,44 @@ class Super(db.Model):
     cantidad = db.Column(db.Integer)
     precio = db.Column(db.Float)
     listo = db.Column(db.Boolean, default=False)
+    entrada = db.Column(db.Float)
+    # salida = db.Column(db.Integer)
+    #entrada_hora = db.Column(db.DateTime, default=db.func.current_timestamp())
 
-    """
-              Este es el metodo constructor de la clase.
-          Crea un nueva instancia de :class:`Super`
-          :param  content: nombre pde producto
-          :param  precio: precio de prducto
-          :param  catidad: cantidad de productos
-          :type   content: str
-          :type   precio: float
-          :type   catidad: int
-          """
 
-    def __init__(self, content,precio, cantidad):
+
+    def __init__(self, content, precio, cantidad, entrada):
         self.content = content
         self.precio = precio
         self.cantidad = cantidad
+
+        # now = datetime.datetime.utcnow().timestamp()
+
+        # print(entrada)
+       # s = entrada
+       #f = "%Y-%m-%dT%H:%M:%S"
+       # now = datetime.datetime.strptime(s, f).timestamp()
+        # print(datetime.timestamp())
+
+        s = entrada
+        f = "%Y-%m-%dT%H:%M"
+        now = datetime.strptime(s, f)
+        # print(datetime.timestamp())
+
+
+        self.entrada = now.timestamp()
         self.listo = False
 
+
 db.create_all()
+
 
 """Esta es la Ruta Principal donde se muestran las columnas con sus resultados, se muestra atraves del archivo mostrar_todo.html"""
 @app.route('/')
 def supers_list():
     supers = Super.query.all()
     return render_template('mostrar_todo.html', supers=supers)
+
 
 
 
@@ -58,10 +72,11 @@ def add_super():
     content = request.form.get('content')
     precio = request.form.get('precio')
     cantidad = request.form.get('cantidad')
+    entrada = request.form.get('entrada')
     if not request.form['content'] or not request.form['precio'] or not request.form['cantidad']:
         flash('Debes llenar todos los campos')
         return redirect('/')
-    super = Super(content, precio,cantidad)
+    super = Super(content, precio,cantidad,entrada)
     db.session.add(super)
     db.session.commit()
     flash('Registro guardado con exito!')
@@ -82,8 +97,10 @@ def delete_super(super_id):
     return redirect('/')
 
 
+
 """Esta función es Booleana en donde por default esta en False(Sin tachar).
 """
+
 
 @app.route('/listo/<int:super_id>')
 def resolver_super(super_id):
@@ -92,12 +109,24 @@ def resolver_super(super_id):
     if not super:
         return redirect('/')
     if super.listo:
+
         super.listo = False
+        time = datetime.now().time()
+        print("HORA DE ENTRADA:")
+        print(time)
+
+
     else:
         super.listo = True
+        time = datetime.now().time()
+        print("HORA DE ENTRADA:")
+        print(time)
 
     db.session.commit()
     return redirect('/')
+
+
+
 
 app.static_folder = 'static'
 
