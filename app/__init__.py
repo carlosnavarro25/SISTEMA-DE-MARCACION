@@ -24,7 +24,8 @@ class Super(db.Model):
     cantidad = db.Column(db.Integer)
     precio = db.Column(db.Float)
     listo = db.Column(db.Boolean, default=False)
-    entrada = db.Column(db.Float)
+    entrada = db.Column(db.String)
+    salida = db.Column(db.String)
     # salida = db.Column(db.Integer)
     #entrada_hora = db.Column(db.DateTime, default=db.func.current_timestamp())
 
@@ -43,13 +44,12 @@ class Super(db.Model):
        # now = datetime.datetime.strptime(s, f).timestamp()
         # print(datetime.timestamp())
 
-        s = entrada
-        f = "%Y-%m-%dT%H:%M"
-        now = datetime.strptime(s, f)
+        # s = entrada
+        # f = "%Y-%m-%dT%H:%M"
+        # now = datetime.strptime(s, f)
         # print(datetime.timestamp())
+        self.entrada = entrada
 
-
-        self.entrada = now.timestamp()
         self.listo = False
 
 
@@ -73,6 +73,7 @@ def add_super():
     precio = request.form.get('precio')
     cantidad = request.form.get('cantidad')
     entrada = request.form.get('entrada')
+
     if not request.form['content'] or not request.form['precio'] or not request.form['cantidad']:
         flash('Debes llenar todos los campos')
         return redirect('/')
@@ -111,15 +112,14 @@ def resolver_super(super_id):
     if super.listo:
 
         super.listo = False
-        time = datetime.now().time()
-        print("HORA DE ENTRADA:")
-        print(time)
+
 
 
     else:
         super.listo = True
         time = datetime.now().time()
-        print("HORA DE ENTRADA:")
+        print("HORA DE SALIDA:")
+        flash('Salio con exito')
         print(time)
 
     db.session.commit()

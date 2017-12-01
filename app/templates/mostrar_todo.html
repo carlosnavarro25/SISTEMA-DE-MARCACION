@@ -78,7 +78,7 @@ function checkTime(i) {
     <p><input type="text" name="content" placeholder="Nombre"> <input type="text" name="cantidad" placeholder="Codigo"></p>
     <p><input type="text" name="precio" placeholder="Hora de entrada"></p>
 
-  Quantity (Elije la hora de entrada 1 and 24):
+  Elije la hora de entrada
   <input type="datetime-local" name="entrada" >
 
 
@@ -97,7 +97,8 @@ function checkTime(i) {
 <td># de Trabajador: {{ super.cantidad }}</td>
         <br>
       <td>Hora de precio: {{ super.precio }}</td><br>
-        <td>Hora de Entrada: <span class="entrada" >{{ super.entrada }}</span> </td>
+        <td>Entrada: <span class="entrada" >{{ super.entrada }}</span> </td>
+        <td>Salida: <span class="salida" >{{ super.salida }}</span> </td>
 
         <br>
         <a href="/listo/{{ super.id }}"> <img src="https://cdn2.iconfinder.com/data/icons/peppyicons/512/Checked-512.png" height="45" width="45"> </a>
