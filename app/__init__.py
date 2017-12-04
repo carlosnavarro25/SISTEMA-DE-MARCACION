@@ -11,7 +11,7 @@ app.config['SECRET_KEY'] = 'uippc3'
 
 db = SQLAlchemy(app)
 
-def _get_date():
+def hora():
     return datetime.now()
 
 """
@@ -25,31 +25,18 @@ class Super(db.Model):
     listo = db.Column(db.Boolean, default=False)
     entrada = db.Column(db.String)
     salida = db.Column(db.String)
-    # created_at = db.Column(db.Date, default=_get_date)
-    # salida = db.Column(db.Integer)
-    #entrada_hora = db.Column(db.DateTime, default=db.func.current_timestamp())
 
 
 
-    def __init__(self, content, cantidad, entrada): #<< agregar date.time
+
+
+    def __init__(self, content, cantidad, entrada):
         self.content = content
         self.cantidad = cantidad
-
-        # now = datetime.datetime.utcnow().timestamp()
-
-        # print(entrada)
-       # s = entrada
-       #f = "%Y-%m-%dT%H:%M:%S"
-       # now = datetime.datetime.strptime(s, f).timestamp()
-        # print(datetime.timestamp())
-
-        # s = entrada
-        # f = "%Y-%m-%dT%H:%M"
-        # now = datetime.strptime(s, f)
-        # print(datetime.timestamp())
         self.entrada = entrada
         self.listo = False
-        # self.created_at = created_at
+
+
 
 
 db.create_all()
@@ -60,9 +47,6 @@ db.create_all()
 def supers_list():
     supers = Super.query.all()
     return render_template('mostrar_todo.html', supers=supers)
-
-
-
 
 """     Esta ruta agrega los resultados en la db, si no se agregan datos tira error en el flash
     """
@@ -81,7 +65,6 @@ def add_super():
     flash('Registro guardado con exito!')
     return redirect('/')
 
-
 @app.route('/delete/<int:super_id>')
 def delete_super(super_id):
     super = Super.query.get(super_id)
@@ -93,10 +76,6 @@ def delete_super(super_id):
     db.session.commit()
     flash('Se borro con exito!')
     return redirect('/')
-
-
-
-
 
 @app.route('/listo/<int:super_id>')
 def resolver_super(super_id):
@@ -117,7 +96,7 @@ def resolver_super(super_id):
     db.session.commit()
     return redirect('/')
 
-
+var = datetime.now()
 
 
 app.static_folder = 'static'
