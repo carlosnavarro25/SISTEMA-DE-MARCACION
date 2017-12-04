@@ -1,115 +1,115 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <link rel="shortcut icon" type="image/png" href="static/favicon.png"/>
-
-<title>Sistema de Marcación</title>
-    <link rel="stylesheet" href="{{ url_for('static', filename='css/listasuper.css') }}">
-</head>
-<body>
-
-
-
-
-
-  <img src="static/control-system.jpg" alt="Logo" height="200" width="600">
-
-<ul>
-    La hora ACTUAL es:
-    <html>
-<head>
-    <script
+  <link rel="shortcut icon" type="image/png" href="static/favicon.png"/>
+  <title>MRKT</title>
+  <link href="https://maxcdn.bootstrapcdn.com/font-awesome/4.2.0/css/font-awesome.min.css" rel="stylesheet">
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+  <script
   src="https://code.jquery.com/jquery-3.2.1.slim.min.js"
   integrity="sha256-k2WSCIexGzOj3Euiig+TlR8gA0EmPjuc79OEeY5L45g="
   crossorigin="anonymous"></script>
-<script>
-function startTime() {
-    var today = new Date();
-    var h = today.getHours();
-    var m = today.getMinutes();
-    var s = today.getSeconds();
-    m = checkTime(m);
-    s = checkTime(s);
-    document.getElementById('txt').innerHTML =
-    h + ":" + m + ":" + s;
-    var t = setTimeout(startTime, 500);
-}
-function checkTime(i) {
+  <script>
+    function startTime() {
+      var today = new Date();
+      var h = today.getHours();
+      var m = today.getMinutes();
+      var s = today.getSeconds();
+      m = checkTime(m);
+      s = checkTime(s);
+      document.getElementById('txt').innerHTML =
+      h + ":" + m + ":" + s;
+      var t = setTimeout(startTime, 500);
+    }
+    function checkTime(i) {
     if (i < 10) {i = "0" + i};  // add zero in front of numbers < 10
     return i;
-}
+  }
 
-<!--function tester(){-->
+  <!--function tester(){-->
     <!--return 1;-->
-<!--}-->
+    <!--}-->
 
 
 
-<!--$( document ).ready(function() {-->
+    <!--$( document ).ready(function() {-->
 
-    <!--function getTime(fecha){-->
-    <!--fecha = parseFloat(fecha);-->
-    <!--var dateTime = new Date(fecha);-->
-    <!--return dateTime.toISOString();-->
-<!--}-->
+      <!--function getTime(fecha){-->
+        <!--fecha = parseFloat(fecha);-->
+        <!--var dateTime = new Date(fecha);-->
+        <!--return dateTime.toISOString();-->
+        <!--}-->
 
-    <!--$('.entrada').each(function(){-->
-        <!--el = $(this);-->
-        <!--date = getTime( el.text() );-->
-        <!--el.text(date);-->
-    <!--})-->
-<!--});-->
+        <!--$('.entrada').each(function(){-->
+          <!--el = $(this);-->
+          <!--date = getTime( el.text() );-->
+          <!--el.text(date);-->
+          <!--})-->
+        <!--});-->
 
 
-</script>
-</head>
-
-<body onload="startTime()">
-
-<div id="txt"></div>
-
-</body>
-</html>
+      </script>
+      <link rel="stylesheet" href="style.css">
+    </head>
+    <body>
+      <div class ="container">
+        <h1 class="jumbotron">
+          MRKT
+          <body onload="startTime()">
+            <div id="txt"></div>
+          </body>
+        </h1>
+        <div class="row">
+          <div class="col-sm-12">
+            <form class="form-inline" action="/super" method="post">
+              <div class="form-group">
+                <label for="email">Nombre:</label>
+                <input type="text" name="content" placeholder="Nombre"class="form-control">
+              </div>
+              <div class="form-group">
+                <label for="pwd">Id:</label>
+                <input type="text" name="cantidad" placeholder="Codigo" class="form-control">
+              </div>
+              <div class="form-group">
+                <label for="pwd">Hora:</label>
+                <input type="datetime-local" name="entrada" class="form-control">
+              </div>
+              <button type="submit" class="btn btn-default" value="Agregar">Submit</button>
+            </form>
+            <br>
+            {% for mensaje in get_flashed_messages() %}
+            {{ mensaje }}
+            {% endfor %}
+            <br>
+          </div>
+        </div>
+      </div>
       <br>
-         {% for mensaje in get_flashed_messages() %}
-    {{ mensaje }}
-  {% endfor %}<br>
-    <form action="/super" method="post">
-    <p><input type="text" name="content" placeholder="Nombre"> <input type="text" name="cantidad" placeholder="Codigo"></p>
-    <p><input type="text" name="precio" placeholder="Hora de entrada"></p>
-
-  Elije la hora de entrada
-  <input type="datetime-local" name="entrada" >
-
-
-        <!--<input type="time" name="entrada_horas">-->
-
-
-    <input type="submit" value="Agregar">
-
-</form>
-
-{% for super in supers %}
-
-    <li class="respuesta">
-        <hr/>
-        Nombre: {% if super.listo %} <strike> {% endif %}{{ super.content }} {% if super.listo %} </strike>{% endif %}<br>
-<td># de Trabajador: {{ super.cantidad }}</td>
-        <br>
-      <td>Hora de precio: {{ super.precio }}</td><br>
-        <td>Entrada: <span class="entrada" >{{ super.entrada }}</span> </td>
-        <td>Salida: <span class="salida" >{{ super.salida }}</span> </td>
-
-        <br>
-        <a href="/listo/{{ super.id }}"> <img src="https://cdn2.iconfinder.com/data/icons/peppyicons/512/Checked-512.png" height="45" width="45"> </a>
-        <a href="/delete/{{ super.id }}"> <img src="http://icons.iconarchive.com/icons/hopstarter/sleek-xp-basic/128/Close-icon.png" height="45" width="45" > </a>
-    </li>
-{% endfor %}
-</ul>
+      <br>
+      <div class="container">
+        <table class="table">
+          <thead>
+            <tr>
+              <th>Nombre</th>
+              <th>LLegada</th>
+              <th>Eliminar</th>
+            </tr>
+          </thead>
+          <tbody>
+            {% for super in supers %}
+            <tr>
+              <td>{% if super.listo %} <strike> {% endif %}{{ super.content }} {% if super.listo %} </strike>{% endif %}</td>
+              <td>{{ super.entrada }}</td>
+              <td><a href="/delete/{{ super.id }}" class="btn btn-danger"> X </a></td>
+            </tr>
+            {% endfor %}
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </body>
+  </html>
 
 
-
-
-
-</body>
-</html>

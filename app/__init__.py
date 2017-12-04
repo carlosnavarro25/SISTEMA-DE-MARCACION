@@ -2,9 +2,7 @@ from flask import Flask, request, flash
 from flask import render_template
 from flask import redirect
 from flask_sqlalchemy import SQLAlchemy
-from _datetime import datetime
-
-
+from datetime import datetime
 
 
 app = Flask(__name__)
@@ -13,6 +11,8 @@ app.config['SECRET_KEY'] = 'uippc3'
 
 db = SQLAlchemy(app)
 
+def _get_date():
+    return datetime.now()
 
 """
    Clase en donde se crea la tablas de la base de datos y se declaran las columnas
@@ -22,18 +22,17 @@ class Super(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     content = db.Column(db.String)
     cantidad = db.Column(db.Integer)
-    precio = db.Column(db.Float)
     listo = db.Column(db.Boolean, default=False)
     entrada = db.Column(db.String)
     salida = db.Column(db.String)
+    # created_at = db.Column(db.Date, default=_get_date)
     # salida = db.Column(db.Integer)
     #entrada_hora = db.Column(db.DateTime, default=db.func.current_timestamp())
 
 
 
-    def __init__(self, content, precio, cantidad, entrada):
+    def __init__(self, content, cantidad, entrada): #<< agregar date.time
         self.content = content
-        self.precio = precio
         self.cantidad = cantidad
 
         # now = datetime.datetime.utcnow().timestamp()
@@ -49,8 +48,8 @@ class Super(db.Model):
         # now = datetime.strptime(s, f)
         # print(datetime.timestamp())
         self.entrada = entrada
-
         self.listo = False
+        # self.created_at = created_at
 
 
 db.create_all()
@@ -70,21 +69,19 @@ def supers_list():
 @app.route('/super', methods=['POST'])
 def add_super():
     content = request.form.get('content')
-    precio = request.form.get('precio')
     cantidad = request.form.get('cantidad')
     entrada = request.form.get('entrada')
 
-    if not request.form['content'] or not request.form['precio'] or not request.form['cantidad']:
+    if not request.form['content'] or not request.form['cantidad']:
         flash('Debes llenar todos los campos')
         return redirect('/')
-    super = Super(content, precio,cantidad,entrada)
+    super = Super(content,cantidad,entrada)
     db.session.add(super)
     db.session.commit()
     flash('Registro guardado con exito!')
     return redirect('/')
 
-""" Esta función se encarga de borrar los datos de la base de datos
-"""
+
 @app.route('/delete/<int:super_id>')
 def delete_super(super_id):
     super = Super.query.get(super_id)
@@ -99,8 +96,6 @@ def delete_super(super_id):
 
 
 
-"""Esta función es Booleana en donde por default esta en False(Sin tachar).
-"""
 
 
 @app.route('/listo/<int:super_id>')
@@ -112,9 +107,6 @@ def resolver_super(super_id):
     if super.listo:
 
         super.listo = False
-
-
-
     else:
         super.listo = True
         time = datetime.now().time()
